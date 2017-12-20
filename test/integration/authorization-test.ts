@@ -1,6 +1,6 @@
 import { sinon, expect, fetchMock } from '../test-helper';
 import { Config } from '../../src/index';
-import { configSetup, ApplicationRecord, Author } from '../fixtures';
+import { configSetup, ApplicationRecord, Author, Account } from '../fixtures';
 
 after(function () {
   fetchMock.restore();
@@ -167,6 +167,33 @@ describe('authorization headers', function() {
         });
       });
     });
+
+
+    describe('custom authorization headers', function() {
+      describe('when header is set on model class', function () {
+        beforeEach(function () {
+          ApplicationRecord.jwt = 'customt0k3n';
+        });
+
+        afterEach(function () {
+          fetchMock.restore();
+          ApplicationRecord.jwt = null;
+        });
+
+        it('is reformatted by tthe subclass and sent in request', function (done) {
+          fetchMock.mock(
+            'http://example.com/api/v1/accounts',
+            (url, opts) => {
+              expect(opts.headers.Authorization).to.eq('Bearer customt0k3n');
+              done();
+              return true;
+            }
+          );
+          Account.all().then(() => {done()});
+        });
+      });
+    });
+
   });
 
   describe('a write request', function() {

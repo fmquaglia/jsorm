@@ -82,7 +82,7 @@ export default class Model {
     }
 
     if (this.getJWT()) {
-      options.headers.Authorization = `Token token="${this.getJWT()}"`;
+        options.headers.Authorization = this.generateAuthHeader(this.getJWT());
     }
 
     return options
@@ -165,6 +165,10 @@ export default class Model {
 
   static fromJsonapi(resource: japiResource, payload: japiDoc) : any {
     return deserialize(resource, payload);
+  }
+
+  static generateAuthHeader(jwt: string) : string {
+    return `Token token="${jwt}"`;
   }
 
   constructor(attributes?: Object) {
