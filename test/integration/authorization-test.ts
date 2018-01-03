@@ -41,7 +41,7 @@ describe('authorization headers', function() {
       Person.generateAuthHeader = originalHeaderFn;
     });
 
-    it('expects true to be true', function(done) {
+    it('sends the custom Authorization token in the request¡\'s headers', function(done) {
       fetchMock.mock((url, opts) => {
         expect(opts.headers.Authorization).to.eq('Bearer cu570m70k3n');
         done();
