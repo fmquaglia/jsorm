@@ -97,20 +97,11 @@ class MultiWord extends ApplicationRecord {
 
 const TestJWTSubclass = ApplicationRecord.extend({});
 
-let Account = ApplicationRecord.extend({
-  static: {
-    endpoint: '/v1/accounts',
-    jsonapiType: 'accounts',
-    generateAuthHeader(jwt) {
-      return `Bearer ${jwt}"`;
-    }
-  }
-});
 
 const NonJWTOwner = Model.extend({});
 
 const configSetup = function(opts = {}) {
-  opts['jwtOwners'] = [ApplicationRecord, TestJWTSubclass, Account];
+  opts['jwtOwners'] = [ApplicationRecord, TestJWTSubclass];
   Config.setup(opts);
 };
 configSetup();
@@ -119,7 +110,6 @@ export {
   configSetup,
   ApplicationRecord,
   TestJWTSubclass,
-  Account,
   NonJWTOwner,
   Author,
   NonFictionAuthor,

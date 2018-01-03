@@ -1,6 +1,6 @@
 import { sinon, expect, fetchMock } from '../test-helper';
 import { Config } from '../../src/index';
-import { configSetup, ApplicationRecord, Author, Account } from '../fixtures';
+import { configSetup, ApplicationRecord, Author, Person } from '../fixtures';
 
 after(function () {
   fetchMock.restore();
@@ -24,6 +24,30 @@ describe('authorization headers', function() {
         return true;
       }, 200);
       Author.find(1);
+    });
+  });
+
+  describe('when header is set in a custom generateAuthHeader', function() {
+    let originalHeaderFn = Person.generateAuthHeader;
+    beforeEach(function() {
+      ApplicationRecord.jwt = 'cu570m70k3n';
+      Person.generateAuthHeader = function(token) {
+        return `Bearer ${token}`;
+      };
+    });
+
+    afterEach(function() {
+      fetchMock.restore();
+      Person.generateAuthHeader = originalHeaderFn;
+    });
+
+    it('expects true to be true', function(done) {
+      fetchMock.mock((url, opts) => {
+        expect(opts.headers.Authorization).to.eq('Bearer cu570m70k3n');
+        done();
+        return true;
+      }, 200);
+      Person.find(1);
     });
   });
 
@@ -167,33 +191,6 @@ describe('authorization headers', function() {
         });
       });
     });
-
-
-    describe('custom authorization headers', function() {
-      describe('when header is set on model class', function () {
-        beforeEach(function () {
-          ApplicationRecord.jwt = 'customt0k3n';
-        });
-
-        afterEach(function () {
-          fetchMock.restore();
-          ApplicationRecord.jwt = null;
-        });
-
-        it('is reformatted by tthe subclass and sent in request', function (done) {
-          fetchMock.mock(
-            'http://example.com/api/v1/accounts',
-            (url, opts) => {
-              expect(opts.headers.Authorization).to.eq('Bearer customt0k3n');
-              done();
-              return true;
-            }
-          );
-          Account.all().then(() => {done()});
-        });
-      });
-    });
-
   });
 
   describe('a write request', function() {
