@@ -97,7 +97,6 @@ class MultiWord extends ApplicationRecord {
 
 const TestJWTSubclass = ApplicationRecord.extend({});
 
-
 const NonJWTOwner = Model.extend({});
 
 const configSetup = function(opts = {}) {
