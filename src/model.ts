@@ -82,7 +82,7 @@ export default class Model {
     }
 
     if (this.getJWT()) {
-        options.headers.Authorization = this.generateAuthHeader(this.getJWT());
+      options.headers.Authorization = this.generateAuthHeader(this.getJWT());
     }
 
     return options
