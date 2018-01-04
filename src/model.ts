@@ -184,7 +184,7 @@ export default class Model {
   }
 
   static generateAuthHeader(jwt: string) : string {
-    return `Token token="${jwt}"`;
+    return `Bearer ${jwt}`;
   }
 
   constructor(attributes?: Object) {
