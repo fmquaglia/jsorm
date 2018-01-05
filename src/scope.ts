@@ -145,7 +145,7 @@ export default class Scope {
   asQueryParams() : Object {
     let qp = {};
 
-    qp['page']          = this._pagination;
+    qp['limit']         = this._pagination;
     qp['filter']        = this._filter;
     qp['sort']          = this._sortParam(this._sort) || [];
     qp['fields']        = this._fields;
